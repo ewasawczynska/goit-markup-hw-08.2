@@ -4,7 +4,7 @@ const formData = 'feedback-form-state';
 const form = document.querySelector('.feedback-form');
 
 const inputData = {
-  email: '',
+  emailAddress: '',
   message: '',
 
   clear() {
@@ -13,9 +13,9 @@ const inputData = {
   },
 };
 
-function setData(inputData) {
+function setData(data) {
   try {
-    localStorage.setItem(formData, JSON.stringify(inputData));
+    localStorage.setItem(formData, JSON.stringify(data));
   } catch (error) {
     console.log(error.name);
     console.log(error.message);
@@ -27,7 +27,7 @@ function getData(key, data) {
     const serializedState = localStorage.getItem(key);
     const getInputData =
       serializedState === null ? undefined : JSON.parse(serializedState);
-    data.email = getInputData.email;
+    data.emailAddress = getInputData.emailAddress;
     data.message = getInputData.message;
     return data;
   } catch (error) {
@@ -40,15 +40,15 @@ function removeData(key) {
   localStorage.removeItem(key);
 }
 
-function completeForm(email, message) {
-  form.email.value = email;
+function completeForm(emailAddress, message) {
+  form.email.value = emailAddress;
   form.message.value = message;
 }
 
-completeForm(inputData.email, inputData.message);
+completeForm(inputData.emailAddress, inputData.message);
 
 function saveForm(event) {
-  formData.email = form.email.value;
+  formData.emailAddress = form.email.value;
   formData.message = form.message.value;
   setData(formData);
 }
@@ -70,6 +70,8 @@ function sendForm(event) {
   console.log(inputData);
   resetData();
 }
+
+getData(formData, inputData);
 
 form.addEventListener('input', throttle(saveForm, 1000));
 form.addEventListener('submit', sendForm);
