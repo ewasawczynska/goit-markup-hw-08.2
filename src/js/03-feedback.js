@@ -1,6 +1,6 @@
 import throttle from 'lodash.throttle';
 
-const formData = 'feedback-form-state';
+const LOCALSTORAGE_KEY = 'feedback-form-state';
 const form = document.querySelector('.feedback-form');
 
 const inputData = {
@@ -8,14 +8,14 @@ const inputData = {
   message: '',
 
   clear() {
-    this.email = '';
+    this.emailAddress = '';
     this.message = '';
   },
 };
 
 function setData(data) {
   try {
-    localStorage.setItem(formData, JSON.stringify(data));
+    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(data));
   } catch (error) {
     console.log(error.name);
     console.log(error.message);
@@ -36,6 +36,8 @@ function getData(key, data) {
   }
 }
 
+getData(LOCALSTORAGE_KEY, inputData);
+
 function removeData(key) {
   localStorage.removeItem(key);
 }
@@ -48,19 +50,19 @@ function completeForm(emailAddress, message) {
 completeForm(inputData.emailAddress, inputData.message);
 
 function saveForm(event) {
-  formData.emailAddress = form.email.value;
-  formData.message = form.message.value;
-  setData(formData);
+  inputData.emailAddress = form.email.value;
+  inputData.message = form.message.value;
+  setData(inputData);
 }
 
 function getFormData() {
-  getFormData(formData, inputData);
+  getFormData(LOCALSTORAGE_KEY, inputData);
   completeForm;
   completeForm(inputData.email, inputData.message);
 }
 
 function resetData() {
-  removeData(formData);
+  removeData(LOCALSTORAGE_KEY);
   inputData.clear();
   completeForm(' ', ' ');
 }
@@ -70,8 +72,6 @@ function sendForm(event) {
   console.log(inputData);
   resetData();
 }
-
-getData(formData, inputData);
 
 form.addEventListener('input', throttle(saveForm, 1000));
 form.addEventListener('submit', sendForm);
